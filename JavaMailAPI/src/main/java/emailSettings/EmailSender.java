@@ -1,10 +1,17 @@
+package emailSettings;
+
+import database.Connector;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class EmailSender {
-    public static void sendMail (String recipient) throws MessagingException {
+    private static ArrayList<String> arrayList;
+
+    public static void sendMail (String recipient) {
         String myAccountEmail = DataRetrieval.getJsonObject("accountGmail");
         String password = DataRetrieval.getJsonObject("password");
         Properties properties = new Properties();
@@ -20,9 +27,7 @@ public class EmailSender {
                 return new PasswordAuthentication(myAccountEmail, password);
             }
         });
-
         Message message = prepareMessage(session, myAccountEmail, recipient);
-
         try {
             assert message != null;
             Transport.send(message);
@@ -30,19 +35,23 @@ public class EmailSender {
         catch (MessagingException exception) {
             exception.printStackTrace();
         }
+    }
 
+    private static ArrayList<String> getRecipientMail() {
+        return Connector.runConnect();
     }
 
     private static Message prepareMessage(Session session, String myAccountEmail, String recipient) {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(myAccountEmail));
-            message.setRecipients(Message.RecipientType.TO, String.valueOf(new InternetAddress(recipient)));
+            for (String s : arrayList)
+                message.addRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(s)});
 
-            message.setSubject("Test 2");
-            message.setText("Test text 2");
+            message.setSubject("Test 3");
+            message.setText("Test text 3");
 
-            System.out.println("Email go");
+            System.out.println("Email go db");
 
             return message;
         }
@@ -52,8 +61,9 @@ public class EmailSender {
         }
     }
 
-    public static void main(String[] args) throws MessagingException {
-        EmailSender.sendMail("recipient");
+    public static void main(String[] args) {
+        arrayList = getRecipientMail();
+        EmailSender.sendMail("@gmail");
     }
 }
 
