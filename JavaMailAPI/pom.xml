@@ -26,7 +26,7 @@
                 <appendAssemblyId>false</appendAssemblyId>
                 <archive>
                     <manifest>
-                        <mainClass>connect.Connect</mainClass>
+                        <mainClass>emailSettings.EmailSender</mainClass>
                     </manifest>
                 </archive>
             </configuration>
