@@ -1,0 +1,6 @@
+language: java
+before_script:
+ - echo "Starting build"
+script:
+ - cd JavaMailAPI
+ - mvn clean package
